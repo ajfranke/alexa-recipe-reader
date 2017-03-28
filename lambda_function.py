@@ -20,14 +20,8 @@ def build_speechlet_response(title, output, reprompt_text, should_end_session,
     show_card = True, card_content = ""):
 
     response = {
-        'outputSpeech': {
-            'type': 'PlainText'
-        },
-        'reprompt': {
-            'outputSpeech': {
-                'type': 'PlainText'
-            }
-        },
+        'outputSpeech': { },
+        'reprompt': { 'outputSpeech': { } },
         'shouldEndSession': should_end_session
     }
 
@@ -43,17 +37,13 @@ def build_speechlet_response(title, output, reprompt_text, should_end_session,
             response['card']['content'] = strip_ssml(output)
 
     # detect use of SSML in response
-    if '<speak>' in output:
-        response['outputSpeech']['type'] = 'SSML'
-        response['outputSpeech']['ssml'] = output
-    else:
-        response['outputSpeech']['text'] = output
+    response['outputSpeech']['type'] = 'SSML'
+    response['outputSpeech']['ssml'] = to_ssml(output + '<audio src="https://s3.amazonaws.com/recipereader/silent_48k.mp3" />')
+
     # detect use of SSML in reprompt
-    if reprompt_text and '<speak>' in reprompt_text:
+    if reprompt_text:
         response['reprompt']['outputSpeech']['type'] = 'SSML'
-        response['reprompt']['outputSpeech']['ssml'] = reprompt_text
-    else:
-        response['reprompt']['outputSpeech']['text'] = reprompt_text
+        response['reprompt']['outputSpeech']['ssml'] = to_ssml(reprompt_text)
 
     return response
 
@@ -105,7 +95,7 @@ def get_welcome_response():
     should_end_session = False
 
     return build_response(session_attributes, build_speechlet_response(
-        card_title, to_ssml(speech_output), reprompt_text, should_end_session))
+        card_title, speech_output, reprompt_text, should_end_session))
 
 
 def get_help_response():
@@ -121,7 +111,7 @@ def get_help_response():
     reprompt_text = "Try saying begin song to start."
     should_end_session = False
     return build_response(session_attributes, build_speechlet_response(
-        card_title, to_ssml(speech_output), reprompt_text, should_end_session))
+        card_title, speech_output, reprompt_text, should_end_session))
 
 
 def handle_session_end_request():
@@ -166,7 +156,7 @@ def start_instructions(intent, session):
     db_log_step(session['user']['userId'], recipe, first_step)
 
     return build_response(sesh_attr, build_speechlet_response(title,
-        to_ssml(speech), reprompt_text=done_this_step(), should_end_session=False, show_card=False))
+        speech, reprompt_text=done_this_step(), should_end_session=False, show_card=False))
 
 
 def load_recipes(filepath="recipes.json"):
@@ -222,12 +212,12 @@ def get_next(intent, session):
         sesh_attr.update({'last_step': next_step, 'recipe': recipe})
 
         return build_response(sesh_attr, build_speechlet_response("Next Step",
-            to_ssml(step_to_ssml(next_step)), reprompt_text=done_this_step(),
+            step_to_ssml(next_step), reprompt_text=done_this_step(),
             should_end_session=False, show_card=False))
     else:
         return build_response(sesh_attr, build_speechlet_response(
             recipe['title']+": Finished!",
-            to_ssml("That was the last step!  " + recipe['conclusion']),
+            "That was the last step!  " + recipe['conclusion'],
             reprompt_text=None, should_end_session=True, show_card=False))
 
 
@@ -248,7 +238,7 @@ def set_pause(intent, session):
     sesh_attr = persist_attributes(session)
 
     return build_response(sesh_attr, build_speechlet_response("Waiting...",
-        to_ssml(add_ssml_pause("10s")), reprompt_text=None,
+        add_ssml_pause("10s"), reprompt_text=None,
         should_end_session=True, show_card=False))
 
 
@@ -275,7 +265,7 @@ def get_previous(intent, session):
     sesh_attr.update({'last_step': next_step, 'recipe': recipe})
 
     return build_response(sesh_attr, build_speechlet_response("Going Back",
-            to_ssml(step_to_ssml(next_step)), reprompt_text=done_this_step(),
+            step_to_ssml(next_step), reprompt_text=done_this_step(),
             should_end_session=False, show_card=False))
 
 
@@ -304,7 +294,7 @@ def get_repeat(intent, session):
         last_step = ds.deserialize(full_last_step['step'])
 
     return build_response(sesh_attr, build_speechlet_response("Replay Step",
-            to_ssml(step_to_ssml(last_step)), reprompt_text=done_this_step(),
+            step_to_ssml(last_step), reprompt_text=done_this_step(),
             should_end_session=False, show_card=False))
 
 
@@ -329,7 +319,7 @@ def get_start_over(intent, session):
     sesh_attr.update({'last_step': next_step, 'recipe': recipe})
 
     return build_response(sesh_attr, build_speechlet_response("Starting Over",
-            to_ssml(step_to_ssml(next_step)), reprompt_text=done_this_step(),
+            step_to_ssml(next_step), reprompt_text=done_this_step(),
             should_end_session=False, show_card=False))
 
 
