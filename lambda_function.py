@@ -38,12 +38,17 @@ def build_speechlet_response(title, output, reprompt_text, should_end_session,
 
     # detect use of SSML in response
     response['outputSpeech']['type'] = 'SSML'
-    response['outputSpeech']['ssml'] = to_ssml(output + '<audio src="https://s3.amazonaws.com/recipereader/silent_48k.mp3" />')
+    if output:
+        response['outputSpeech']['ssml'] = to_ssml(output + '<audio src="https://s3.amazonaws.com/recipereader/silent_48k.mp3" />')
+    else:
+        response['outputSpeech']['ssml'] = to_ssml("  ")
 
     # detect use of SSML in reprompt
+    response['reprompt']['outputSpeech']['type'] = 'SSML'
     if reprompt_text:
-        response['reprompt']['outputSpeech']['type'] = 'SSML'
         response['reprompt']['outputSpeech']['ssml'] = to_ssml(reprompt_text)
+    else:
+        response['reprompt']['outputSpeech']['ssml'] = to_ssml("  ")
 
     return response
 
@@ -119,9 +124,8 @@ def handle_session_end_request():
     card_title = "Signing Off"
     speech_output = ""
     # Setting this to true ends the session and exits the skill.
-    should_end_session = True
-    return build_response({}, build_speechlet_response(
-        card_title, speech_output, None, should_end_session, show_card=False))
+    return build_response({}, build_speechlet_response(card_title, speech_output,
+        reprompt_text=None, should_end_session=True, show_card=False))
 
 
 def start_instructions(intent, session):
