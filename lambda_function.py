@@ -1,7 +1,5 @@
 """
-Alexa Directions Template Application
-
-(c) Arthur J. Franke, 2017
+Alexa Recipe Reader Template Skill
 
 """
 
@@ -210,9 +208,10 @@ def get_next(intent, session):
         recipe = sesh_attr['recipe']
         last_step = sesh_attr['last_step']
     else:
+        ds = TypeDeserializer()
         full_last_step = db_get_last_step(userID)
-        recipe = full_last_step['recipe']
-        last_step = recipe['step']
+        recipe = ds.deserialize(full_last_step['recipe'])
+        last_step = ds.deserialize(full_last_step['step'])
 
 
     next_step = recipe_next_step(recipe, last_step)
@@ -264,9 +263,10 @@ def get_previous(intent, session):
         recipe = sesh_attr['recipe']
         last_step = sesh_attr['last_step']
     else:
+        ds = TypeDeserializer()
         full_last_step = db_get_last_step(userID)
-        recipe = full_last_step['recipe']
-        last_step = recipe['step']
+        recipe = ds.deserialize(full_last_step['recipe'])
+        last_step = ds.deserialize(full_last_step['step'])
 
     next_step = recipe_prior_step(recipe, last_step)
 
@@ -299,8 +299,9 @@ def get_repeat(intent, session):
     if 'last_step' in sesh_attr and 'recipe' in sesh_attr:
         last_step = sesh_attr['last_step']
     else:
+        ds = TypeDeserializer()
         full_last_step = db_get_last_step(userID)
-        last_step = recipe['step']
+        last_step = ds.deserialize(full_last_step['step'])
 
     return build_response(sesh_attr, build_speechlet_response("Replay Step",
             to_ssml(step_to_ssml(last_step)), reprompt_text=done_this_step(),
@@ -377,7 +378,7 @@ def on_intent(intent_request, session):
     elif intent_name == "AMAZON.RepeatIntent":
         return get_repeat(intent, session)
     elif intent_name == "AMAZON.ResumeIntent":
-        return get_repeat(intent, session) # AJF: I think this might work?
+        return get_repeat(intent, session)
     elif intent_name == "AMAZON.StartOverIntent":
         return get_start_over(intent, session)
     elif intent_name in ["AMAZON.HelpIntent"]:
