@@ -1,0 +1,6 @@
+StartIntent give directions for {Recipe}
+StartIntent begin {Recipe}
+StartIntent start {Recipe}
+StartIntent kick off {Recipe}
+StartIntent begin a new {Recipe}
+StartIntent start a new {Recipe}

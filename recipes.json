@@ -1,0 +1,31 @@
+{
+  "song":{
+    "title": "A Singing Lesson",
+    "intro": "This recipe will lead you through the steps of building a tune.  ",
+    "conclusion": "Now you know the notes to sing.  You can sing most anything!",
+    "prerequisites": ["a voice", "rhythm", "courage"],
+    "recipe": [
+      {"instruction": "Doe!  A deer, a female deer.  ", "estimated_time": "5s"},
+      {"instruction": "Ray!  A drop of golden sun.  ", "estimated_time": "5s"},
+      {"instruction": "Me!  A name I call myself.  ", "estimated_time": "5s"},
+      {"instruction": "Far!  A long, long way to run.  ", "estimated_time": "5s"},
+      {"instruction": "So!  A needle pulling thread.", "estimated_time": "5s"},
+      {"instruction": "La!  A note to follow so.  ", "estimated_time": "5s"},
+      {"instruction": "Tea!  A drink with jam and bread.  ", "estimated_time": "5s"},
+      {"instruction": "Doe!  We have brought it back to doe.  ", "estimated_time": "5s"}
+    ]
+  },
+  "dance": {
+    "title": "A Dreamy Dance",
+    "intro": "This recipe will lead you through the steps of a marvelous dance.  ",
+    "conclusion": "Oh, I just love success!  ",
+    "prerequisites": ["rhythm", "courage"],
+    "recipe": [
+      {"instruction": "Jump to the left.  ", "estimated_time": "5s"},
+      {"instruction": "Step to the right.  ", "estimated_time": "5s"},
+      {"instruction": "Put your hands on your hips.  ", "estimated_time": "5s"},
+      {"instruction": "Bring your knees in tight.  ", "estimated_time": "5s"},
+      {"instruction": "Go insane!", "estimated_time": "5s"}
+    ]
+  }
+}
