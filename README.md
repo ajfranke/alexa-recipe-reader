@@ -19,9 +19,11 @@ Utilizes Amazon built-in audio directive intents (play, next, repeat, etc.) to l
 | `STEP_LAST_TABLE` | Name of a DynamoDB indexed on `{S: userID }`
 | `AWS_KEY_ID` | Amazon AWS Key ID that provides access to DynamoDB. |
 | `AWS_SECRET` | Amazon AWS secret that matches `AWS_KEY_ID`. |
-
 4. Configure skill with Python Lambda ARN.  Account linking is not needed.
-5. Test and enjoy!
+5. Create a two DynamoDB tables in the same availability zone as where your Lambda is located:
+* One table indexed on `{S: userID }`.  This table will be used as Alexa's memory between user sessions, to remember where the user left off the last completed step of the most recent recipe.  
+* A second table indexed on `{S: userID }` and secondary sort index `{N: time }`.  This table will be used to log activity for later study.  
+6. Test and enjoy!
 
 ## Recipe Store `recipes.json`
 
